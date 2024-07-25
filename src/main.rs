@@ -110,7 +110,6 @@ async fn update_discord(
     tokio::fs::create_dir_all(&install_path).await?;
 
     // Extract the downloaded file
-    // Assumes that at this point the discord install path is valid
     spinner.set_message(format!("Extracting Discord to {}", install_path.display()));
     tar_xf(&download_path, &install_path).await?;
     spinner.finish_with_message("Discord extracted");
@@ -130,7 +129,6 @@ fn default_discord_path() -> Result<PathBuf> {
 
 /// Create a symlink to the given path at <home>/bin/discord
 async fn create_home_bin_symlink(source: &Path) -> Result<()> {
-    // create a symlink to the discord binary in the user's bin directory
     let home_dir = home_dir()?;
     let bin_dir = home_dir.join("bin");
     tokio::fs::create_dir_all(&bin_dir).await?;
@@ -182,5 +180,5 @@ async fn main() -> Result<()> {
         create_home_bin_symlink(&default_discord_path()?).await?;
     }
 
-    Ok(()) // Return Ok if everything is fine
+    Ok(())
 }
