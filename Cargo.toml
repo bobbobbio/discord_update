@@ -1,0 +1,16 @@
+[package]
+name = "discord_update"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+futures = "*"
+indicatif = { version = "*", features = ["tokio"] }
+reqwest = { version = "*", features = ["stream", "json"] }
+semver = "*"
+serde = { version = "*", features = ["derive"] }
+serde_json = "*"
+serde_with = "*"
+tempfile = "*"
+tokio = { version = "*", features = ["full"] }
+tokio-util = { version = "*", features = ["compat"] }
