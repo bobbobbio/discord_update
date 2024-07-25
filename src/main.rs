@@ -91,7 +91,7 @@ async fn update_discord(
         format!("https://dl.discordapp.net/apps/linux/{version}/discord-{version}.tar.gz");
     let download_path = temp_dir
         .path()
-        .join(format!("/tmp/discord-{version}.tar.gz"));
+        .join(format!("discord-{version}.tar.gz"));
 
     let resp = reqwest::get(&download_url).await?;
     let download_size = resp.content_length().unwrap_or(0);
