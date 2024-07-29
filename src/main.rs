@@ -1,5 +1,5 @@
 use futures::stream::TryStreamExt as _;
-use indicatif::{MultiProgress, ProgressBar};
+use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use semver::Version;
 use serde::Deserialize;
 use serde_with::{serde_as, DisplayFromStr};
@@ -89,9 +89,7 @@ async fn update_discord(
     let temp_dir = tempdir()?;
     let download_url =
         format!("https://dl.discordapp.net/apps/linux/{version}/discord-{version}.tar.gz");
-    let download_path = temp_dir
-        .path()
-        .join(format!("discord-{version}.tar.gz"));
+    let download_path = temp_dir.path().join(format!("discord-{version}.tar.gz"));
 
     let resp = reqwest::get(&download_url).await?;
     let download_size = resp.content_length().unwrap_or(0);
@@ -101,7 +99,10 @@ async fn update_discord(
         .into_async_read()
         .compat();
 
-    let pb = multi_prog.add(ProgressBar::new(download_size));
+    let pb = multi_prog.add(
+        ProgressBar::new(download_size)
+            .with_style(ProgressStyle::with_template("{wide_bar} {bytes}/{total_bytes}").unwrap()),
+    );
     let mut download_file = pb.wrap_async_write(tokio::fs::File::create(&download_path).await?);
     tokio::io::copy(&mut download_stream, &mut download_file).await?;
     pb.finish_and_clear();
